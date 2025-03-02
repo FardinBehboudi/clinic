@@ -1,17 +1,5 @@
-from flask import Flask
-from app.extensions import db, migrate, login_manager
-from config import Config
+from flask import Blueprint
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-    db.init_app(app)
-    migrate.init_app(app, db)
-    login_manager.init_app(app)
-
-    # Register Blueprints
-    from app.routes.auth.routes import auth_bp
-    app.register_blueprint(auth_bp)
-
-    return app
+from . import routes  # Import routes after defining Blueprint
