@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Appointments{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Appointments</h2>
+
+    <a href="{{ url_for('appointments.add_appointment') }}" class="btn btn-primary mb-3">Add New Appointment</a>
+
+    <!-- ✅ Filter Form -->
+    <form method="GET" class="row g-3 align-items-center mb-4">
+        <div class="col-md-3">
+            <label for="operator_id" class="form-label">Filter by Operator</label>
+            <select class="form-control" name="operator_id" id="operator_id">
+                <option value="">All Operators</option>
+                {% for operator in operators %}
+                    <option value="{{ operator.operator_id }}" {% if selected_operator == operator.operator_id %}selected{% endif %}>
+                        {{ operator.first_name }} {{ operator.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="patient_id" class="form-label">Filter by Patient</label>
+            <select class="form-control" name="patient_id" id="patient_id">
+                <option value="">All Patients</option>
+                {% for patient in patients %}
+                    <option value="{{ patient.patient_id }}" {% if selected_patient == patient.patient_id %}selected{% endif %}>
+                        {{ patient.first_name }} {{ patient.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="procedure_type_id" class="form-label">Filter by Procedure Type</label>
+            <select class="form-control" name="procedure_type_id" id="procedure_type_id">
+                <option value="">All Procedures</option>
+                {% for procedure_type in procedure_types %}
+                    <option value="{{ procedure_type.procedure_type_id }}" {% if selected_procedure == procedure_type.procedure_type_id %}selected{% endif %}>
+                        {{ procedure_type.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="appointment_date" class="form-label">Filter by Date</label>
+            <input type="date" class="form-control" name="appointment_date" value="{{ selected_date }}">
+        </div>
+
+        <div class="col-md-12 mt-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Patient</th>
+                <th>Operator</th>
+                <th>Procedure Type</th>
+                <th>Appointment Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.appointment_title }}</td>
+                <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+                <td>{{ appointment.operator.first_name }} {{ appointment.operator.last_name }}</td>
+                <td>{{ appointment.procedure_type.name }}</td>
+                <td>{{ appointment.appointment_date }}</td>
+                <td><span class="badge bg-info">{{ appointment.status.status_name }}</span></td>
+                <td>
+                    <a href="{{ url_for('appointments.view_appointment', appointment_id=appointment.appointment_id) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="{{ url_for('appointments.edit_appointment', appointment_id=appointment.appointment_id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+                    <form method="POST" action="{{ url_for('appointments.delete_appointment', appointment_id=appointment.appointment_id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // Auto-submit form when filters change
+    document.getElementById('operator_id').addEventListener('change', function() {
+        this.form.submit();
+    });
+    document.getElementById('patient_id').addEventListener('change', function() {
+        this.form.submit();
+    });
+    document.getElementById('procedure_type_id').addEventListener('change', function() {
+        this.form.submit();
+    });
+    document.getElementById('appointment_date').addEventListener('change', function() {
+        this.form.submit();
+    });
+</script>
+
+{% endblock %}

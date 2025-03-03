@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Appointment{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Edit Appointment</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="patient_id" class="form-label">Patient</label>
+            <select class="form-control" name="patient_id" required>
+                {% for patient in patients %}
+                <option value="{{ patient.patient_id }}" {% if patient.patient_id == appointment.patient_id %}selected{% endif %}>
+                    {{ patient.first_name }} {{ patient.last_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="operator_id" class="form-label">Operator</label>
+            <select class="form-control" name="operator_id" required>
+                {% for operator in operators %}
+                <option value="{{ operator.operator_id }}" {% if operator.operator_id == appointment.operator_id %}selected{% endif %}>
+                    {{ operator.first_name }} {{ operator.last_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="procedure_type_id" class="form-label">Procedure Type</label>
+            <select class="form-control" name="procedure_type_id" required>
+                {% for procedure_type in procedure_types %}
+                <option value="{{ procedure_type.procedure_type_id }}" {% if procedure_type.procedure_type_id == appointment.procedure_type_id %}selected{% endif %}>
+                    {{ procedure_type.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="appointment_date" class="form-label">Appointment Date</label>
+            <input type="date" class="form-control" name="appointment_date" value="{{ appointment.appointment_date }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="appointment_title" class="form-label">Appointment Title</label>
+            <input type="text" class="form-control" name="appointment_title" value="{{ appointment.appointment_title }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="status_id" class="form-label">Status</label>
+            <select class="form-control" name="status_id" required>
+                {% for status in statuses %}
+                <option value="{{ status.status_id }}" {% if status.status_id == appointment.status_id %}selected{% endif %}>
+                    {{ status.status_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="note" class="form-label">Notes</label>
+            <textarea class="form-control" name="note">{{ appointment.note }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Appointment</button>
+        <a href="{{ url_for('appointments.list_appointments') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

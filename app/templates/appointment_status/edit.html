@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Appointment Status{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Edit Appointment Status</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="status_name" class="form-label">Status Name</label>
+            <input type="text" class="form-control" name="status_name" value="{{ status.status_name }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Status</button>
+        <a href="{{ url_for('appointment_status.list_statuses') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

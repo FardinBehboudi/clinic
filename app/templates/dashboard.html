@@ -149,6 +149,32 @@
     </div>
     {% endif %}
 
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Appointments</h5>
+                    <p class="card-text">View and schedule appointments.</p>
+                    <a href="{{ url_for('appointments.list_appointments') }}" class="btn btn-light">Go to Appointments</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-4">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Appointment Statuses</h5>
+                    <p class="card-text">View, add, edit, and manage appointment statuses.</p>
+                    <a href="{{ url_for('appointment_status.list_statuses') }}" class="btn btn-light">Go to Statuses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 
 </div>
 {% endblock %}

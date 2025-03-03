@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Appointment Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Appointment Details</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Appointment Information</h5>
+            <p><strong>Title:</strong> {{ appointment.appointment_title }}</p>
+            <p><strong>Patient:</strong>
+                <a href="{{ url_for('patients.view_patient', patient_id=appointment.patient.patient_id) }}">
+                    {{ appointment.patient.first_name }} {{ appointment.patient.last_name }}
+                </a>
+            </p>
+            <p><strong>Operator:</strong>
+                <a href="{{ url_for('operators.view_operator', operator_id=appointment.operator.operator_id) }}">
+                    {{ appointment.operator.first_name }} {{ appointment.operator.last_name }}
+                </a>
+            </p>
+            <p><strong>Procedure Type:</strong> {{ appointment.procedure_type.name }}</p>
+            <p><strong>Appointment Date:</strong> {{ appointment.appointment_date }}</p>
+            <p><strong>Status:</strong> <span class="badge bg-info">{{ appointment.status.status_name }}</span></p>
+            <p><strong>Notes:</strong> {{ appointment.note if appointment.note else "No notes available" }}</p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('appointments.list_appointments') }}" class="btn btn-secondary mt-3">Back to Appointments</a>
+</div>
+{% endblock %}
