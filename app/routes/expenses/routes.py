@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from datetime import datetime
 from app.extensions import db
-from app.models.expense import Expenses, ExpenseType, ExpenseCategory
+from app.models.expense import Expenses, ExpenseType, ExpenseCategory, Inventory
 from . import expenses_bp
 
 def admin_or_doctor_required(func):
@@ -21,16 +21,18 @@ def admin_or_doctor_required(func):
 @admin_or_doctor_required
 def add_expense():
     expense_types = ExpenseType.query.all()
+    expense_categories = ExpenseCategory.query.all()
 
     if request.method == 'POST':
         expense_type_id = request.form['expense_type_id']
         expense_category_id = request.form['expense_category_id']
         brand = request.form.get('brand', None)
-        quantity = request.form['quantity']
+        quantity = request.form.get('quantity', None)  # Can be NULL
         unit = request.form.get('unit', None)
-        total_price = request.form['total_price']
+        total_price = float(request.form['total_price'])
         purchase_date = request.form['purchase_date']
         provider = request.form.get('provider', None)
+        is_stock = request.form.get('is_stock', False)  # ✅ Checkbox to mark as stock item
 
         new_expense = Expenses(
             clinic_id=current_user.clinic_id,
@@ -47,11 +49,26 @@ def add_expense():
         db.session.add(new_expense)
         db.session.commit()
 
+        # ✅ Fetch the selected expense category from the database
+        expense_category = ExpenseCategory.query.get(expense_category_id)
+
+        # ✅ Add to Inventory if it's a stock item
+        if is_stock and quantity and float(quantity) > 0:
+            price_per_unit = total_price / float(quantity)
+            new_inventory = Inventory(
+                expense_id=new_expense.expense_id,
+                category_name=expense_category.category_name if expense_category else "Unknown",
+                brand=brand,
+                price_per_unit=price_per_unit,
+                quantity_available=float(quantity)
+            )
+            db.session.add(new_inventory)
+            db.session.commit()
+
         flash('Expense added successfully!', 'success')
         return redirect(url_for('expenses.list_expenses'))
 
-    return render_template('expenses/add.html', expense_types=expense_types)
-
+    return render_template('expenses/add.html', expense_types=expense_types, expense_categories=expense_categories)
 
 # 📌 List All Expenses (Sorted by Date, Latest First)
 @expenses_bp.route('/', methods=['GET'])
@@ -132,10 +149,16 @@ def delete_expense(expense_id):
         flash("Access denied: You can only delete expenses from your clinic.", "danger")
         return redirect(url_for('expenses.list_expenses'))
 
+    # ✅ Remove associated inventory entry if exists
+    inventory_item = Inventory.query.filter_by(expense_id=expense.expense_id).first()
+    if inventory_item:
+        db.session.delete(inventory_item)
+
     db.session.delete(expense)
     db.session.commit()
-    flash("Expense deleted successfully!", "success")
+    flash("Expense and associated inventory deleted successfully!", "success")
     return redirect(url_for('expenses.list_expenses'))
+
 
 @expenses_bp.route('/<int:expense_id>')
 @login_required

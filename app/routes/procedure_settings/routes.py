@@ -2,7 +2,7 @@ from functools import wraps
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app.extensions import db
-from app.models.procedure import ProcedureMaterial, ProcedureType, BodyRegion, ProcedureTypeBodyRegion
+from app.models.procedure import ProcedureType, BodyRegion, ProcedureTypeBodyRegion
 from . import procedure_settings_bp
 
 # 📌 Ensure only Admins or Doctors can modify settings
@@ -16,28 +16,20 @@ def admin_or_doctor_required(func):
     return login_required(wrapper)
 
 # 📌 List All Procedure Settings
-@procedure_settings_bp.route('/')
+@procedure_settings_bp.route('/', methods=['GET'])
 @login_required
+@admin_or_doctor_required
 def list_settings():
-    materials = ProcedureMaterial.query.all()
     procedure_types = ProcedureType.query.all()
     body_regions = BodyRegion.query.all()
     mappings = ProcedureTypeBodyRegion.query.all()
-    return render_template('procedure_settings/list.html', materials=materials, procedure_types=procedure_types, body_regions=body_regions, mappings=mappings)
 
-# 📌 Add Procedure Material
-@procedure_settings_bp.route('/materials/add', methods=['GET', 'POST'])
-@login_required
-@admin_or_doctor_required
-def add_material():
-    if request.method == 'POST':
-        name = request.form['name']
-        new_material = ProcedureMaterial(name=name)
-        db.session.add(new_material)
-        db.session.commit()
-        flash('Procedure Material added successfully!', 'success')
-        return redirect(url_for('procedure_settings.list_settings'))
-    return render_template('procedure_settings/add_material.html')
+    return render_template(
+        'procedure_settings/list.html',
+        procedure_types=procedure_types,
+        body_regions=body_regions,
+        mappings=mappings  # ✅ Removed `materials`
+    )
 
 # 📌 Add Procedure Type
 @procedure_settings_bp.route('/procedure-types/add', methods=['GET', 'POST'])
@@ -85,32 +77,6 @@ def add_procedure_type_body_region():
         return redirect(url_for('procedure_settings.list_settings'))
 
     return render_template('procedure_settings/add_procedure_type_body_region.html', procedure_types=procedure_types, body_regions=body_regions)
-
-# 📌 Edit Procedure Material
-@procedure_settings_bp.route('/materials/<int:material_id>/edit', methods=['GET', 'POST'])
-@login_required
-@admin_or_doctor_required
-def edit_material(material_id):
-    material = ProcedureMaterial.query.get_or_404(material_id)
-
-    if request.method == 'POST':
-        material.name = request.form['name']
-        db.session.commit()
-        flash('Procedure Material updated successfully!', 'success')
-        return redirect(url_for('procedure_settings.list_settings'))
-
-    return render_template('procedure_settings/edit_material.html', material=material)
-
-# 📌 Delete Procedure Material
-@procedure_settings_bp.route('/materials/<int:material_id>/delete', methods=['POST'])
-@login_required
-@admin_or_doctor_required
-def delete_material(material_id):
-    material = ProcedureMaterial.query.get_or_404(material_id)
-    db.session.delete(material)
-    db.session.commit()
-    flash('Procedure Material deleted successfully!', 'success')
-    return redirect(url_for('procedure_settings.list_settings'))
 
 # 📌 Edit Procedure Type
 @procedure_settings_bp.route('/procedure-types/<int:type_id>/edit', methods=['GET', 'POST'])

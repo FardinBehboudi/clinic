@@ -16,6 +16,7 @@
                 <th>Operator</th>
                 <th>Date</th>
                 <th>Price (€)</th>
+                <th>Materials Used</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -29,6 +30,17 @@
                 <td>{{ procedure.procedure_date }}</td>
                 <td>{{ procedure.price }}</td>
                 <td>
+                    {% if procedure.procedure_material_costs %}
+                        {% for material in procedure.procedure_material_costs %}
+                            {{ material.inventory.brand }} ({{ material.quantity_used }} {{ material.unit }})<br>
+                        {% endfor %}
+                    {% else %}
+                        <span>No materials used</span>
+                    {% endif %}
+                </td>
+
+
+                <td>
                     {% if procedure.status == "completed" %}
                         <span class="badge bg-success">Completed</span>
                     {% else %}
@@ -38,7 +50,6 @@
                 <td>
                     <a href="{{ url_for('procedures.view_procedure', procedure_id=procedure.procedure_id) }}" class="btn btn-info btn-sm">View</a>
 
-                    <!-- Show Edit/Delete for Admins, Doctors, or if the logged-in user is the operator -->
                     {% if current_user.role.role_name == "Admin" or current_user.role.role_name == "Doctor" or procedure.operator_id == user_operator_id %}
                         <a href="{{ url_for('procedures.edit_procedure', procedure_id=procedure.procedure_id) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ url_for('procedures.delete_procedure', procedure_id=procedure.procedure_id) }}" method="POST" style="display:inline;">
@@ -46,7 +57,6 @@
                         </form>
                     {% endif %}
 
-                    <!-- Show "Mark as Completed" button for Admins & Doctors if procedure is pending -->
                     {% if procedure.status == "pending" and current_user.role.role_name in ["Admin", "Doctor"] %}
                         <form action="{{ url_for('procedures.complete_procedure', procedure_id=procedure.procedure_id) }}" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Mark this procedure as completed?');">

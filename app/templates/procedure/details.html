@@ -21,11 +21,39 @@
                 </a>
             </p>
             <p><strong>Body Region:</strong> {{ procedure.body_region.name }}</p>
-            <p><strong>Brand:</strong> {{ procedure.brand }}</p>
             <p><strong>Procedure Date:</strong> {{ procedure.procedure_date }}</p>
             <p><strong>Price (€):</strong> {{ procedure.price }}</p>
         </div>
     </div>
+
+    <!-- ✅ Show Procedure Materials -->
+    <h4 class="mt-4">Used Materials</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Quantity Used</th>
+                <th>Unit</th>
+                <th>Price Per Unit (€)</th>
+            </tr>
+        </thead>
+    <tbody>
+        {% for material in procedure.procedure_material_costs %}
+        <tr>
+            <td>{{ material.inventory.category_name }}</td>
+            <td>{{ material.inventory.brand }}</td>
+            <td>{{ material.quantity_used }}</td>
+            <td>{{ material.unit }}</td>
+            <td>{{ material.inventory.price_per_unit }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" class="text-center">No materials used</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
 
 
     <a href="{{ url_for('procedures.list_procedures') }}" class="btn btn-secondary mt-3">Back to Procedures</a>

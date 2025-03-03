@@ -71,8 +71,7 @@ def view_patient(patient_id):
             Operator.first_name.label("operator_first_name"),
             Operator.last_name.label("operator_last_name"),
             ProcedureType.name.label("procedure_type"),
-            BodyRegion.name.label("body_region"),
-            Procedure.brand
+            BodyRegion.name.label("body_region")
         )
         .join(Procedure, PatientHistory.procedure_id == Procedure.procedure_id)
         .join(Operator, PatientHistory.operator_id == Operator.operator_id)

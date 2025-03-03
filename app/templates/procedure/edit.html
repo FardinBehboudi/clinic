@@ -17,6 +17,7 @@
                 {% endfor %}
             </select>
         </div>
+
         <div class="mb-3">
             <label class="form-label">Operator</label>
             <select class="form-control" name="operator_id" required>
@@ -27,6 +28,7 @@
                 {% endfor %}
             </select>
         </div>
+
         <div class="mb-3">
             <label class="form-label">Procedure Type</label>
             <select class="form-control" name="procedure_type_id" required>
@@ -37,6 +39,7 @@
                 {% endfor %}
             </select>
         </div>
+
         <div class="mb-3">
             <label class="form-label">Body Region</label>
             <select class="form-control" name="body_region_id" required>
@@ -47,19 +50,96 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Brand</label>
-            <input type="text" class="form-control" name="brand" value="{{ procedure.brand }}">
-        </div>
+
         <div class="mb-3">
             <label class="form-label">Price (€)</label>
             <input type="number" class="form-control" name="price" value="{{ procedure.price }}" step="0.01" min="0" required>
         </div>
+
         <div class="mb-3">
             <label class="form-label">Procedure Date</label>
             <input type="date" class="form-control" name="procedure_date" value="{{ procedure.procedure_date }}" required>
         </div>
+
+        <!-- ✅ Procedure Materials Section -->
+        <h4>Procedure Materials (Optional)</h4>
+        <div id="materials-container">
+            {% for material in procedure.procedure_material_costs %}
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Category</label>
+                    <select class="form-control material-category">
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category }}" {% if material.inventory.category_name == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Material (Brand & Price Per Unit)</label>
+                    <select class="form-control material-inventory" name="inventory_id">
+                        <option value="{{ material.inventory.inventory_id }}">
+                            {{ material.inventory.brand }} (€{{ material.inventory.price_per_unit }}/unit)
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Quantity Used</label>
+                    <input type="number" step="0.01" class="form-control" name="material_quantity"
+                           value="{{ material.quantity_used }}">
+                </div>
+
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger w-100 remove-material">Remove</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="btn btn-secondary" id="add-material">Add Material</button>
         <button type="submit" class="btn btn-success">Update Procedure</button>
     </form>
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('add-material').addEventListener('click', function() {
+        var container = document.getElementById('materials-container');
+        var newRow = container.firstElementChild.cloneNode(true);
+        container.appendChild(newRow);
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-material')) {
+            event.target.closest('.row').remove();
+        }
+    });
+
+    document.querySelectorAll(".material-category").forEach(select => {
+        select.addEventListener("change", function() {
+            var category = this.value;
+            var inventorySelect = this.closest(".row").querySelector(".material-inventory");
+
+            fetch(`/procedures/get-materials/${category}`)
+                .then(response => response.json())
+                .then(data => {
+                    inventorySelect.innerHTML = '<option value="">Select Material</option>';
+                    data.forEach(item => {
+                        var option = document.createElement("option");
+                        option.value = item.id;
+                        option.textContent = `${item.brand} (€${item.price_per_unit}/unit) (Stock: ${item.quantity_available})`;
+                        inventorySelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching materials:', error));
+        });
+    });
+});
+</script>
+
 {% endblock %}

@@ -26,7 +26,6 @@
                 <th>Operator</th>
                 <th>Procedure</th>
                 <th>Body Region</th>
-                <th>Brand</th>
                 <th>Price (€)</th>
             </tr>
         </thead>
@@ -37,7 +36,6 @@
                 <td>{{ record.operator_first_name }} {{ record.operator_last_name }}</td>
                 <td>{{ record.procedure_type }}</td>
                 <td>{{ record.body_region }}</td>
-                <td>{{ record.brand if record.brand else "N/A" }}</td>
                 <td>{{ record.price }}</td>
             </tr>
             {% endfor %}

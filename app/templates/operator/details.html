@@ -25,7 +25,6 @@
                 <th>Patient</th>
                 <th>Procedure</th>
                 <th>Body Region</th>
-                <th>Brand</th>
             </tr>
         </thead>
         <tbody>
@@ -39,7 +38,6 @@
                 </td>
                 <td>{{ record.procedure_type }}</td>
                 <td>{{ record.body_region }}</td>
-                <td>{{ record.brand if record.brand else "N/A" }}</td>
             </tr>
             {% endfor %}
         </tbody>

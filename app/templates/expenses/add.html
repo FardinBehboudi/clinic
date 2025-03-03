@@ -53,6 +53,11 @@
             <label for="provider" class="form-label">Provider (Optional)</label>
             <input type="text" class="form-control" name="provider">
         </div>
+        <div class="mb-3">
+            <label class="form-label">Mark as Stock Item</label>
+            <input type="checkbox" name="is_stock">
+        </div>
+
 
         <button type="submit" class="btn btn-success">Add Expense</button>
         <a href="{{ url_for('expenses.list_expenses') }}" class="btn btn-secondary">Cancel</a>

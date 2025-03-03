@@ -46,11 +46,6 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Brand</label>
-            <input type="text" class="form-control" name="brand">
-        </div>
-
-        <div class="mb-3">
             <label class="form-label">Price (€)</label>
             <input type="number" class="form-control" name="price" step="0.01" min="0" required>
         </div>
@@ -60,44 +55,123 @@
             <input type="date" class="form-control" name="procedure_date" required>
         </div>
 
-        <button type="submit" class="btn btn-success">Add Procedure</button>
+        <!-- ✅ Procedure Materials Section -->
+<h4>Procedure Materials</h4>
+<div id="materials-container">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label class="form-label">Category</label>
+            <select class="form-control material-category">
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Material (Brand & Price Per Unit)</label>
+            <select class="form-control material-inventory" name="inventory_id">
+                <option value="">Select Category First</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Quantity Used</label>
+            <input type="number" step="0.01" class="form-control" name="material_quantity">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button type="button" class="btn btn-danger w-100 remove-material">Remove</button>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-secondary" id="add-material">Add Material</button>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success mt-3">Add Procedure</button>
+        </div>
     </form>
 </div>
 
-<!-- JavaScript for Dynamic Filtering and Operator Selection -->
+<!-- JavaScript for Dynamic Fields -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var procedureTypeSelect = document.getElementById("procedure_type");
-        var bodyRegionSelect = document.getElementById("body_region");
-        var operatorSelect = document.getElementById("operator_select");
-        var selectMeButton = document.getElementById("select_me");
+document.addEventListener("DOMContentLoaded", function() {
+    var procedureTypeSelect = document.getElementById("procedure_type");
+    var bodyRegionSelect = document.getElementById("body_region");
+    var operatorSelect = document.getElementById("operator_select");
+    var selectMeButton = document.getElementById("select_me");
 
-        // ✅ Fetch body regions dynamically based on procedure type
-        procedureTypeSelect.addEventListener("change", function() {
-            var procedureTypeId = this.value;
-            bodyRegionSelect.innerHTML = '<option value="">-- Select Body Region --</option>';
+    // ✅ Fetch body regions dynamically based on procedure type
+    procedureTypeSelect.addEventListener("change", function() {
+        var procedureTypeId = this.value;
+        bodyRegionSelect.innerHTML = '<option value="">-- Select Body Region --</option>';
 
-            if (procedureTypeId) {
-                fetch(`/procedures/get-body-regions/${procedureTypeId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(region => {
-                            var option = document.createElement("option");
-                            option.value = region.id;
-                            option.textContent = region.name;
-                            bodyRegionSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching body regions:', error));
-            }
-        });
-
-        // ✅ Select "Me!" to auto-fill logged-in operator
-        {% if logged_in_operator %}
-        selectMeButton.addEventListener("click", function() {
-            operatorSelect.value = "{{ logged_in_operator.operator_id }}";
-        });
-        {% endif %}
+        if (procedureTypeId) {
+            fetch(`/procedures/get-body-regions/${procedureTypeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(region => {
+                        var option = document.createElement("option");
+                        option.value = region.id;
+                        option.textContent = region.name;
+                        bodyRegionSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching body regions:', error));
+        }
     });
+
+    // ✅ Select "Me!" to auto-fill logged-in operator
+    {% if logged_in_operator %}
+    selectMeButton.addEventListener("click", function() {
+        operatorSelect.value = "{{ logged_in_operator.operator_id }}";
+    });
+    {% endif %}
+
+    // ✅ Add and remove materials dynamically while clearing fields
+    document.getElementById('add-material').addEventListener('click', function() {
+        var container = document.getElementById('materials-container');
+        var newRow = container.firstElementChild.cloneNode(true);
+
+        // ✅ Clear inputs before appending
+        newRow.querySelector(".material-category").value = "";
+        newRow.querySelector(".material-inventory").innerHTML = '<option value="">Select Category First</option>';
+        newRow.querySelector("input[name='material_quantity']").value = "";
+
+        container.appendChild(newRow);
+    });
+
+    // ✅ Remove material row when clicking remove button
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-material')) {
+            event.target.closest('.row').remove();
+        }
+    });
+
+    // ✅ Fetch materials dynamically based on category selection
+    document.addEventListener('change', function(event) {
+        if (event.target.classList.contains('material-category')) {
+            var category = event.target.value;
+            var inventorySelect = event.target.closest(".row").querySelector(".material-inventory");
+
+            fetch(`/procedures/get-materials/${category}`)
+                .then(response => response.json())
+                .then(data => {
+                    inventorySelect.innerHTML = '<option value="">Select Material</option>';
+                    data.forEach(item => {
+                        var option = document.createElement("option");
+                        option.value = item.id;
+                        option.textContent = `${item.brand} (€${item.price_per_unit}/unit) (Stock: ${item.quantity_available})`;
+                        inventorySelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching materials:', error));
+        }
+    });
+});
 </script>
+
+
 {% endblock %}

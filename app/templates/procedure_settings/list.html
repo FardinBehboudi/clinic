@@ -7,38 +7,10 @@
     <h2 class="text-center mt-4">Procedure Settings</h2>
 
     {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <a href="{{ url_for('procedure_settings.add_material') }}" class="btn btn-primary mb-3">Add Procedure Material</a>
     <a href="{{ url_for('procedure_settings.add_procedure_type') }}" class="btn btn-primary mb-3">Add Procedure Type</a>
     <a href="{{ url_for('procedure_settings.add_body_region') }}" class="btn btn-primary mb-3">Add Body Region</a>
     <a href="{{ url_for('procedure_settings.add_procedure_type_body_region') }}" class="btn btn-primary mb-3">Map Procedure Type to Body Region</a>
     {% endif %}
-
-    <h4>Procedure Materials</h4>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Name</th>
-                {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-                <th>Actions</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for material in materials %}
-            <tr>
-                <td>{{ material.name }}</td>
-                {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-                <td>
-                    <a href="{{ url_for('procedure_settings.edit_material', material_id=material.id) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ url_for('procedure_settings.delete_material', material_id=material.id) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
-                    </form>
-                </td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
     <h4>Procedure Types</h4>
     <table class="table table-bordered">
