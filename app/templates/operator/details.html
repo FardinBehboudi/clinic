@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Operator Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Operator Details</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Operator Information</h5>
+            <p><strong>Name:</strong> {{ operator.first_name }} {{ operator.last_name }}</p>
+            <p><strong>Phone:</strong> {{ operator.phone }}</p>
+            <p><strong>Specialty:</strong> {{ operator.specialty if operator.specialty else "Not Provided" }}</p>
+            <p><strong>Experience Years:</strong> {{ operator.experience_years if operator.experience_years else "Not Provided" }}</p>
+        </div>
+    </div>
+
+    <h3 class="mt-4">Procedure History</h3>
+    {% if history %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Patient</th>
+                <th>Procedure</th>
+                <th>Body Region</th>
+                <th>Brand</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in history %}
+            <tr>
+                <td>{{ record.procedure_date }}</td>
+                <td>
+                <a href="{{ url_for('patients.view_patient', patient_id=record[2]) }}">
+                    {{ record.patient_first_name }} {{ record.patient_last_name }}
+                </a>
+                </td>
+                <td>{{ record.procedure_type }}</td>
+                <td>{{ record.body_region }}</td>
+                <td>{{ record.brand if record.brand else "N/A" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No procedure history available for this operator.</p>
+    {% endif %}
+
+    <a href="{{ url_for('operators.list_operators') }}" class="btn btn-secondary mt-3">Back to Operators</a>
+</div>
+{% endblock %}

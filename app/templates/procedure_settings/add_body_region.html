@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Add Body Region{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Add Body Region</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Body Region Name</label>
+            <input type="text" class="form-control" name="name" required>
+        </div>
+        <button type="submit" class="btn btn-success">Add Body Region</button>
+    </form>
+</div>
+{% endblock %}

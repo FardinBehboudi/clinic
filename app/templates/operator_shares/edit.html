@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Operator Share{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Edit Operator Share</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="operator_name" class="form-label">Operator</label>
+            <input type="text" class="form-control" id="operator_name" value="{{ share.operator.first_name }} {{ share.operator.last_name }}" disabled>
+        </div>
+
+        <div class="mb-3">
+            <label for="clinic_percentage" class="form-label">Clinic Percentage</label>
+            <input type="number" class="form-control" id="clinic_percentage" name="clinic_percentage" value="{{ share.clinic_percentage }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="operator_percentage" class="form-label">Operator Percentage</label>
+            <input type="number" class="form-control" id="operator_percentage" name="operator_percentage" value="{{ share.operator_percentage }}" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Share</button>
+        <a href="{{ url_for('operator_shares.list_operator_shares') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

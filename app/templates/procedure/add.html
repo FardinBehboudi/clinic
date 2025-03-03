@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Add Procedure{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Add New Procedure</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Patient</label>
+            <select class="form-control" name="patient_id" required>
+                {% for patient in patients %}
+                <option value="{{ patient.patient_id }}">{{ patient.first_name }} {{ patient.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Operator</label>
+            <select class="form-control" id="operator_select" name="operator_id" required>
+                {% for operator in operators %}
+                <option value="{{ operator.operator_id }}">{{ operator.first_name }} {{ operator.last_name }}</option>
+                {% endfor %}
+            </select>
+            {% if logged_in_operator %}
+            <button type="button" class="btn btn-secondary mt-2" id="select_me">Select Me!</button>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Procedure Type</label>
+            <select class="form-control" id="procedure_type" name="procedure_type_id" required>
+                <option value="">-- Select Procedure Type --</option>
+                {% for procedure_type in procedure_types %}
+                <option value="{{ procedure_type.procedure_type_id }}">{{ procedure_type.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Body Region</label>
+            <select class="form-control" id="body_region" name="body_region_id" required>
+                <option value="">-- Select Body Region --</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Brand</label>
+            <input type="text" class="form-control" name="brand">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Price (€)</label>
+            <input type="number" class="form-control" name="price" step="0.01" min="0" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Procedure Date</label>
+            <input type="date" class="form-control" name="procedure_date" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Procedure</button>
+    </form>
+</div>
+
+<!-- JavaScript for Dynamic Filtering and Operator Selection -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var procedureTypeSelect = document.getElementById("procedure_type");
+        var bodyRegionSelect = document.getElementById("body_region");
+        var operatorSelect = document.getElementById("operator_select");
+        var selectMeButton = document.getElementById("select_me");
+
+        // ✅ Fetch body regions dynamically based on procedure type
+        procedureTypeSelect.addEventListener("change", function() {
+            var procedureTypeId = this.value;
+            bodyRegionSelect.innerHTML = '<option value="">-- Select Body Region --</option>';
+
+            if (procedureTypeId) {
+                fetch(`/procedures/get-body-regions/${procedureTypeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(region => {
+                            var option = document.createElement("option");
+                            option.value = region.id;
+                            option.textContent = region.name;
+                            bodyRegionSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching body regions:', error));
+            }
+        });
+
+        // ✅ Select "Me!" to auto-fill logged-in operator
+        {% if logged_in_operator %}
+        selectMeButton.addEventListener("click", function() {
+            operatorSelect.value = "{{ logged_in_operator.operator_id }}";
+        });
+        {% endif %}
+    });
+</script>
+{% endblock %}

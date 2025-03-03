@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Procedure Material{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Edit Procedure Material</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Material Name</label>
+            <input type="text" class="form-control" name="name" value="{{ material.name }}" required>
+        </div>
+        <button type="submit" class="btn btn-success">Update Material</button>
+    </form>
+</div>
+{% endblock %}

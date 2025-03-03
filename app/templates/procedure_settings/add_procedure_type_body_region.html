@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Add Procedure Type-Body Region Mapping{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Map Procedure Type to Body Region</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Procedure Type</label>
+            <select class="form-control" name="procedure_type_id" required>
+                {% for procedure_type in procedure_types %}
+                <option value="{{ procedure_type.procedure_type_id }}">{{ procedure_type.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Body Region</label>
+            <select class="form-control" name="body_region_id" required>
+                {% for body_region in body_regions %}
+                <option value="{{ body_region.body_region_id }}">{{ body_region.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Map Procedure Type to Body Region</button>
+    </form>
+</div>
+{% endblock %}

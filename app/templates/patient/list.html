@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Patients{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Patients</h2>
+
+    <a href="{{ url_for('patients.add_patient') }}" class="btn btn-primary mb-3">Add New Patient</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                <td>{{ patient.phone }}</td>
+                <td>{{ patient.email or '-' }}</td>
+                <td>
+                    <a href="{{ url_for('patients.view_patient', patient_id=patient.patient_id) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="{{ url_for('patients.edit_patient', patient_id=patient.patient_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form action="{{ url_for('patients.delete_patient', patient_id=patient.patient_id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

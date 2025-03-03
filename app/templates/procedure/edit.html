@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Procedure{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Edit Procedure</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Patient</label>
+            <select class="form-control" name="patient_id" required>
+                {% for patient in patients %}
+                <option value="{{ patient.patient_id }}" {% if patient.patient_id == procedure.patient_id %}selected{% endif %}>
+                    {{ patient.first_name }} {{ patient.last_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Operator</label>
+            <select class="form-control" name="operator_id" required>
+                {% for operator in operators %}
+                <option value="{{ operator.operator_id }}" {% if operator.operator_id == procedure.operator_id %}selected{% endif %}>
+                    {{ operator.first_name }} {{ operator.last_name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Procedure Type</label>
+            <select class="form-control" name="procedure_type_id" required>
+                {% for procedure_type in procedure_types %}
+                <option value="{{ procedure_type.procedure_type_id }}" {% if procedure_type.procedure_type_id == procedure.procedure_type_id %}selected{% endif %}>
+                    {{ procedure_type.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Body Region</label>
+            <select class="form-control" name="body_region_id" required>
+                {% for body_region in body_regions %}
+                <option value="{{ body_region.body_region_id }}" {% if body_region.body_region_id == procedure.body_region_id %}selected{% endif %}>
+                    {{ body_region.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Brand</label>
+            <input type="text" class="form-control" name="brand" value="{{ procedure.brand }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Price (€)</label>
+            <input type="number" class="form-control" name="price" value="{{ procedure.price }}" step="0.01" min="0" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Procedure Date</label>
+            <input type="date" class="form-control" name="procedure_date" value="{{ procedure.procedure_date }}" required>
+        </div>
+        <button type="submit" class="btn btn-success">Update Procedure</button>
+    </form>
+</div>
+{% endblock %}

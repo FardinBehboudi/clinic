@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Operator Shares{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Operator Shares</h2>
+
+    <a href="{{ url_for('operator_shares.add_operator_share') }}" class="btn btn-primary mb-3">Add New Share</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Operator</th>
+                <th>Clinic Percentage</th>
+                <th>Operator Percentage</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for share in operator_shares %}
+            <tr>
+                <td>{{ share.operator.first_name }} {{ share.operator.last_name }}</td>
+                <td>{{ share.clinic_percentage }}%</td>
+                <td>{{ share.operator_percentage }}%</td>
+                <td>
+                    <a href="{{ url_for('operator_shares.edit_operator_share', share_id=share.share_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form method="POST" action="{{ url_for('operator_shares.delete_operator_share', share_id=share.share_id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

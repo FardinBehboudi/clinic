@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-patients_bp = Blueprint('patients', __name__, url_prefix='/patients')
+operators_bp = Blueprint('operators', __name__, url_prefix='/operators')
 
 from . import routes  # Import routes after defining Blueprint

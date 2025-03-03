@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Patient{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Edit Patient</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" name="first_name" value="{{ patient.first_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="last_name" value="{{ patient.last_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" value="{{ patient.phone }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="{{ patient.email }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" name="date_of_birth" value="{{ patient.date_of_birth }}">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Medical History</label>
+            <textarea class="form-control" name="medical_history">{{ patient.medical_history }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Update Patient</button>
+    </form>
+</div>
+{% endblock %}

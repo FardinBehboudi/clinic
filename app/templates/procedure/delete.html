@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Procedure{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4 text-danger">Delete Procedure</h2>
+    <p class="text-center">Are you sure you want to delete this procedure?</p>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Procedure Details</h5>
+            <p><strong>Procedure Type:</strong> {{ procedure.procedure_type.name }}</p>
+            <p><strong>Patient:</strong> {{ procedure.patient.first_name }} {{ procedure.patient.last_name }}</p>
+            <p><strong>Operator:</strong> {{ procedure.operator.first_name }} {{ procedure.operator.last_name }}</p>
+            <p><strong>Date:</strong> {{ procedure.procedure_date }}</p>
+        </div>
+    </div>
+
+    <form method="POST" class="mt-4">
+        <button type="submit" class="btn btn-danger">Delete Procedure</button>
+        <a href="{{ url_for('procedures.list_procedures') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Edit User</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" value="{{ user.phone }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Clinic</label>
+            <select class="form-control" name="clinic_id" required>
+                {% for clinic in clinics %}
+                <option value="{{ clinic.clinic_id }}" {% if clinic.clinic_id == user.clinic_id %}selected{% endif %}>
+                    {{ clinic.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Role</label>
+            <select class="form-control" name="role_id" required>
+                {% for role in roles %}
+                {% if current_user.role.role_name == "Admin" or (current_user.role.role_name == "Doctor" and role.role_name != "Admin") %}
+                <option value="{{ role.role_id }}" {% if role.role_id == user.role_id %}selected{% endif %}>
+                    {{ role.role_name }}
+                </option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update User</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Operator Earnings{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Operator Earnings</h2>
+
+    <!-- ✅ Filter Form -->
+    <form method="GET" class="row g-3 align-items-center mb-4">
+        {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+        <div class="col-md-4">
+            <label for="operator_id" class="form-label">Filter by Operator</label>
+            <select class="form-control" name="operator_id" id="operator_id">
+                <option value="">All Operators</option>
+                {% for operator in operators %}
+                    <option value="{{ operator.operator_id }}" {% if selected_operator == operator.operator_id %}selected{% endif %}>
+                        {{ operator.first_name }} {{ operator.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+
+        <div class="col-md-4">
+            <label for="procedure_type_id" class="form-label">Filter by Procedure Type</label>
+            <select class="form-control" name="procedure_type_id" id="procedure_type_id">
+                <option value="">All Procedures</option>
+                {% for procedure_type in procedure_types %}
+                    <option value="{{ procedure_type.procedure_type_id }}" {% if selected_procedure == procedure_type.procedure_type_id %}selected{% endif %}>
+                        {{ procedure_type.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Procedure Type</th>
+                <th>Operator</th>
+                <th>Date</th>
+                <th>Total Revenue (€)</th>
+                <th>Operator Share (€)</th>
+                <th>Clinic Share (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for earning in earnings %}
+            <tr>
+                <td>{{ earning.procedure.procedure_type.name }}</td>
+                <td>{{ earning.operator.first_name }} {{ earning.operator.last_name }}</td>
+                <td>{{ earning.procedure.procedure_date }}</td>
+                <td>{{ earning.revenue }}</td>
+                <td>{{ earning.operator_share }}</td>
+                <td>{{ earning.clinic_share }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ✅ Total Summary -->
+    <div class="alert alert-info">
+        <strong>Total Revenue:</strong> €{{ total_revenue }} <br>
+        <strong>Total Operator Share:</strong> €{{ total_operator_share }} <br>
+        <strong>Total Clinic Share:</strong> €{{ total_clinic_share }}
+    </div>
+</div>
+
+<script>
+    // Auto-submit form when filters change
+    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+    document.getElementById('operator_id').addEventListener('change', function() {
+        this.form.submit();
+    });
+    {% endif %}
+    document.getElementById('procedure_type_id').addEventListener('change', function() {
+        this.form.submit();
+    });
+</script>
+
+{% endblock %}

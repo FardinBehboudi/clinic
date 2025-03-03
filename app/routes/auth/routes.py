@@ -34,6 +34,11 @@ def logout():
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    # If an admin already exists, disable registration
+    if User.query.count() > 0:
+        flash("Registration is disabled. Only Admins and Doctors can add users.", "danger")
+        return redirect(url_for('auth.login'))
+
     if request.method == 'POST':
         first_name = request.form['first_name']
         last_name = request.form['last_name']
@@ -45,13 +50,10 @@ def register():
             flash('Email already registered', 'danger')
             return redirect(url_for('auth.register'))
 
-        # Assign the first user as an Admin
-        is_first_admin = User.query.count() == 0
-        role_name = "Admin" if is_first_admin else "Doctor"
-        role = Role.query.filter_by(role_name=role_name).first()
-
+        # The first user is always an Admin
+        role = Role.query.filter_by(role_name="Admin").first()
         if not role:
-            flash(f"Role '{role_name}' does not exist. Please create roles first.", "danger")
+            flash("Error: No 'Admin' role found. Please create roles first.", "danger")
             return redirect(url_for('auth.register'))
 
         new_user = User(
@@ -59,14 +61,15 @@ def register():
             last_name=last_name,
             email=email,
             phone=phone,
-            role_id=role.role_id,  # Assign the role
-            is_first_admin=is_first_admin
+            role_id=role.role_id,  # Assign Admin role
+            is_first_admin=True
         )
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Registration successful! You can log in now.', 'success')
+        flash('First Admin created successfully! You can log in now.', 'success')
         return redirect(url_for('auth.login'))
 
     return render_template('auth/register.html')
+

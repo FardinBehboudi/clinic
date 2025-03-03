@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Add Operator Share{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Add Operator Share</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="operator_id" class="form-label">Operator</label>
+            <select class="form-control" id="operator_id" name="operator_id" required>
+                {% for operator in operators %}
+                <option value="{{ operator.operator_id }}">{{ operator.first_name }} {{ operator.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="clinic_percentage" class="form-label">Clinic Percentage</label>
+            <input type="number" class="form-control" id="clinic_percentage" name="clinic_percentage" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="operator_percentage" class="form-label">Operator Percentage</label>
+            <input type="number" class="form-control" id="operator_percentage" name="operator_percentage" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Share</button>
+    </form>
+</div>
+{% endblock %}

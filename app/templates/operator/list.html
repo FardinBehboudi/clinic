@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Operators{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Operator Management</h2>
+
+    <a href="{{ url_for('operators.add_operator') }}" class="btn btn-primary mb-3">Add New Operator</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Specialty</th>
+                <th>Experience</th>
+                <th>Clinic</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for operator in operators %}
+            <tr>
+                <td>{{ operator.first_name }} {{ operator.last_name }}</td>
+                <td>{{ operator.phone }}</td>
+                <td>{{ operator.specialty or 'N/A' }}</td>
+                <td>{{ operator.experience_years or 'N/A' }}</td>
+                <td>{{ operator.clinic.name }}</td>
+                <td>
+                    <a href="{{ url_for('operators.view_operator', operator_id=operator.operator_id) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="{{ url_for('operators.edit_operator', operator_id=operator.operator_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form action="{{ url_for('operators.delete_operator', operator_id=operator.operator_id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

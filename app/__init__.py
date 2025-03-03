@@ -7,7 +7,16 @@ from config import Config
 from app.routes.auth import auth_bp
 from app.routes.auth.profile import profile_bp
 from app.routes.main import main_bp
-
+from app.routes.patient import patients_bp
+from app.routes.clinic import clinics_bp
+from app.routes.user import users_bp
+from app.routes.role import roles_bp
+from app.routes.procedure import procedures_bp
+from app.routes.procedure_settings import procedure_settings_bp
+from app.routes.operator import operators_bp
+from app.routes.operator_shares import operator_shares_bp
+from app.routes.operator_earnings import operator_earnings_bp
+from app.routes.clinic_income import clinic_income_bp
 
 def create_app():
     app = Flask(__name__)
@@ -22,5 +31,15 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(main_bp)
+    app.register_blueprint(patients_bp)
+    app.register_blueprint(clinics_bp)
+    app.register_blueprint(users_bp)
+    app.register_blueprint(roles_bp)
+    app.register_blueprint(procedures_bp)
+    app.register_blueprint(procedure_settings_bp)
+    app.register_blueprint(operators_bp)
+    app.register_blueprint(operator_shares_bp)
+    app.register_blueprint(operator_earnings_bp)
+    app.register_blueprint(clinic_income_bp)
 
     return app

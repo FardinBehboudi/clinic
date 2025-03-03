@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Clinic Income{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Clinic Income</h2>
+
+    <!-- ✅ Filter Form -->
+    <form method="GET" class="row g-3 align-items-center mb-4">
+        <div class="col-md-4">
+            <label for="procedure_type_id" class="form-label">Filter by Procedure Type</label>
+            <select class="form-control" name="procedure_type_id" id="procedure_type_id">
+                <option value="">All Procedures</option>
+                {% for procedure_type in procedure_types %}
+                    <option value="{{ procedure_type.procedure_type_id }}" {% if selected_procedure == procedure_type.procedure_type_id %}selected{% endif %}>
+                        {{ procedure_type.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Procedure Type</th>
+                <th>Date</th>
+                <th>Revenue (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for income in clinic_income %}
+            <tr>
+                <td>{{ income.procedure.procedure_type.name }}</td>
+                <td>{{ income.revenue_date }}</td>
+                <td>{{ income.revenue }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ✅ Total Summary -->
+    <div class="alert alert-info">
+        <strong>Total Clinic Income:</strong> €{{ total_clinic_income }}
+    </div>
+</div>
+
+<script>
+    document.getElementById('procedure_type_id').addEventListener('change', function() {
+        this.form.submit();
+    });
+</script>
+
+{% endblock %}
