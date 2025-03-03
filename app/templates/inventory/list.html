@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Report{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Inventory Report</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Price Per Unit (€)</th>
+                <th>Quantity Available</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory_items %}
+            <tr>
+                <td>{{ item.category_name }}</td>
+                <td>{{ item.brand }}</td>
+                <td>{{ item.price_per_unit }}</td>
+                <td>{{ item.quantity_available }}</td>
+                <td>{{ item.last_updated.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

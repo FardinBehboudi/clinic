@@ -6,203 +6,176 @@
 <div class="container">
     <h2 class="text-center mt-4">Welcome, {{ current_user.first_name }}!</h2>
 
-    <!-- Patients Management Section -->
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Patients</h5>
-                    <p class="card-text">View, add, edit, and manage patient records.</p>
-                    <a href="{{ url_for('patients.list_patients') }}" class="btn btn-light">Go to Patients</a>
+    <!-- 1️⃣ Patient & Appointment Management -->
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Patient & Appointment Management</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Patients</h5>
+                            <p class="card-text">View, add, edit, and manage patient records.</p>
+                            <a href="{{ url_for('patients.list_patients') }}" class="btn btn-light">Go to Patients</a>
+                        </div>
+                    </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Appointments</h5>
+                            <p class="card-text">View and schedule appointments.</p>
+                            <a href="{{ url_for('appointments.list_appointments') }}" class="btn btn-light">Go to Appointments</a>
+                        </div>
+                    </div>
+                </div>
+                {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+                <div class="col-md-4">
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Appointment Statuses</h5>
+                            <p class="card-text">View, add, edit, and manage appointment statuses.</p>
+                            <a href="{{ url_for('appointment_status.list_statuses') }}" class="btn btn-light">Go to Statuses</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- User Management Section (Admins & Doctors) -->
-    {% if current_user.role.role_name == "Admin" or current_user.role.role_name == "Doctor" %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Users</h5>
-                    <p class="card-text">Create and manage clinic users.</p>
-                    <a href="{{ url_for('users.list_users') }}" class="btn btn-light">Go to Users</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Clinics Management Section (Admins Only) -->
-    {% if current_user.role.role_name == "Admin" %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Clinics</h5>
-                    <p class="card-text">View, add, edit, and manage clinics.</p>
-                    <a href="{{ url_for('clinics.list_clinics') }}" class="btn btn-light">Go to Clinics</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Role Management Section (Admins Only) -->
-    {% if current_user.role.role_name == "Admin" %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Roles</h5>
-                    <p class="card-text">Create and manage user roles.</p>
-                    <a href="{{ url_for('roles.list_roles') }}" class="btn btn-light">Go to Roles</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-        <!-- Procedures Management Section (Visible to All) -->
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Procedures</h5>
-                    <p class="card-text">View, add, edit, and manage procedures.</p>
-                    <a href="{{ url_for('procedures.list_procedures') }}" class="btn btn-light">Go to Procedures</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- 2️⃣ Clinic Application Management -->
     {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-dark mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Procedure Settings</h5>
-                    <p class="card-text">Manage Procedure Types, Materials, and Mappings.</p>
-                    <a href="{{ url_for('procedure_settings.list_settings') }}" class="btn btn-light">Go to Procedure Settings</a>
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h4>Clinic Application Management</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Users</h5>
+                            <p class="card-text">Create and manage clinic users.</p>
+                            <a href="{{ url_for('users.list_users') }}" class="btn btn-light">Go to Users</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Clinics</h5>
+                            <p class="card-text">View, add, edit, and manage clinics.</p>
+                            <a href="{{ url_for('clinics.list_clinics') }}" class="btn btn-light">Go to Clinics</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-dark mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Roles</h5>
+                            <p class="card-text">Create and manage user roles.</p>
+                            <a href="{{ url_for('roles.list_roles') }}" class="btn btn-light">Go to Roles</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     {% endif %}
 
+    <!-- 3️⃣ Procedures Management -->
+    <div class="card mt-4">
+        <div class="card-header bg-success text-white">
+            <h4>Procedures Management</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Procedures</h5>
+                            <p class="card-text">View, add, edit, and manage procedures.</p>
+                            <a href="{{ url_for('procedures.list_procedures') }}" class="btn btn-light">Go to Procedures</a>
+                        </div>
+                    </div>
+                </div>
+                {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+                <div class="col-md-6">
+                    <div class="card text-white bg-dark mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Procedure Settings</h5>
+                            <p class="card-text">Manage procedure types, materials, and mappings.</p>
+                            <a href="{{ url_for('procedure_settings.list_settings') }}" class="btn btn-light">Go to Procedure Settings</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 4️⃣ Financial Management -->
     {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Operator Management</h5>
-                    <p class="card-text">Manage Operators within your clinic.</p>
-                    <a href="{{ url_for('operators.list_operators') }}" class="btn btn-light">Go to Operators</a>
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Financial Management</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Clinic Income</h5>
+                            <p class="card-text">Track revenue earned by the clinic.</p>
+                            <a href="{{ url_for('clinic_income.list_clinic_income') }}" class="btn btn-light">View Clinic Income</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Expenses</h5>
+                            <p class="card-text">View, add, and manage clinic expenses.</p>
+                            <a href="{{ url_for('expenses.list_expenses') }}" class="btn btn-light">Go to Expenses</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-dark mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Expense Settings</h5>
+                            <p class="card-text">View, add, edit, and manage expense types and categories.</p>
+                            <a href="{{ url_for('expense_settings.list_expense_settings') }}" class="btn btn-light">Go to Expense Settings</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     {% endif %}
 
-        <!-- Operator Shares Management (Admins & Doctors) -->
-    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Operator Shares</h5>
-                    <p class="card-text">Define and update operator revenue distribution.</p>
-                    <a href="{{ url_for('operator_shares.list_operator_shares') }}" class="btn btn-light">Go to Operator Shares</a>
+    <!-- 5️⃣ Inventory & Materials Management -->
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h4>Inventory & Materials Management</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Inventory Report</h5>
+                            <p class="card-text">View all materials and consumables available in the clinic.</p>
+                            <a href="{{ url_for('inventory.view_inventory') }}" class="btn btn-light">Go to Inventory</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    {% endif %}
-
-    <!-- Operator Earnings (Admins, Doctors, and Operators Themselves) -->
-    {% if current_user.role.role_name in ["Admin", "Doctor"] or current_user.role.role_name == "Operator" %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-info mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Operator Earnings</h5>
-                    <p class="card-text">Track revenue earned from procedures.</p>
-                    <a href="{{ url_for('operator_earnings.list_operator_earnings') }}" class="btn btn-light">View Earnings</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Clinic Income</h5>
-                    <p class="card-text">Track revenue earned by the clinic.</p>
-                    <a href="{{ url_for('clinic_income.list_clinic_income') }}" class="btn btn-light">View Clinic Income</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Appointments</h5>
-                    <p class="card-text">View and schedule appointments.</p>
-                    <a href="{{ url_for('appointments.list_appointments') }}" class="btn btn-light">Go to Appointments</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-secondary mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Appointment Statuses</h5>
-                    <p class="card-text">View, add, edit, and manage appointment statuses.</p>
-                    <a href="{{ url_for('appointment_status.list_statuses') }}" class="btn btn-light">Go to Statuses</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-dark mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Expense Settings</h5>
-                    <p class="card-text">View, add, edit, and manage expense types and categories.</p>
-                    <a href="{{ url_for('expense_settings.list_expense_settings') }}" class="btn btn-light">Go to Expense Settings</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-4">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Manage Expenses</h5>
-                    <p class="card-text">View, add, and manage clinic expenses.</p>
-                    <a href="{{ url_for('expenses.list_expenses') }}" class="btn btn-light">Go to Expenses</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
 
 </div>
 {% endblock %}

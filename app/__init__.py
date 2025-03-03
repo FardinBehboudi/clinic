@@ -21,6 +21,7 @@ from app.routes.appointments import appointments_bp
 from app.routes.appointment_status import appointment_status_bp
 from app.routes.expense_settings import expense_settings_bp
 from app.routes.expenses import expenses_bp
+from app.routes.inventory import inventory_bp
 
 def create_app():
     app = Flask(__name__)
@@ -49,5 +50,6 @@ def create_app():
     app.register_blueprint(appointment_status_bp)
     app.register_blueprint(expense_settings_bp)
     app.register_blueprint(expenses_bp)
+    app.register_blueprint(inventory_bp)
 
     return app
