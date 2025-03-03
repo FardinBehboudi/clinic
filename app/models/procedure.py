@@ -35,4 +35,9 @@ class Procedure(db.Model):
     body_region = db.relationship('BodyRegion', backref='procedures')
 
     # ✅ Ensure this matches the ProcedureMaterialCost model
-    procedure_material_costs = db.relationship("ProcedureMaterialCost", back_populates="procedure",cascade="all, delete")
+    procedure_material_costs = db.relationship(
+        "ProcedureMaterialCost",
+        back_populates="procedure",
+        cascade="all, delete",
+        overlaps="materials_used"
+    )

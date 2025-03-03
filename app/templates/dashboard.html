@@ -46,46 +46,6 @@
         </div>
     </div>
 
-    <!-- 2️⃣ Clinic Application Management -->
-    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
-    <div class="card mt-4">
-        <div class="card-header bg-info text-white">
-            <h4>Clinic Application Management</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card text-white bg-info mb-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Manage Users</h5>
-                            <p class="card-text">Create and manage clinic users.</p>
-                            <a href="{{ url_for('users.list_users') }}" class="btn btn-light">Go to Users</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-danger mb-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Manage Clinics</h5>
-                            <p class="card-text">View, add, edit, and manage clinics.</p>
-                            <a href="{{ url_for('clinics.list_clinics') }}" class="btn btn-light">Go to Clinics</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card text-white bg-dark mb-3">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Manage Roles</h5>
-                            <p class="card-text">Create and manage user roles.</p>
-                            <a href="{{ url_for('roles.list_roles') }}" class="btn btn-light">Go to Roles</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
     <!-- 3️⃣ Procedures Management -->
     <div class="card mt-4">
         <div class="card-header bg-success text-white">
@@ -176,6 +136,85 @@
             </div>
         </div>
     </div>
+
+    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+    <div class="card mt-4">
+        <div class="card-header bg-warning text-white">
+            <h4>Operators Management</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Operators</h5>
+                            <p class="card-text">Assign operators to clinics and manage them.</p>
+                            <a href="{{ url_for('operators.list_operators') }}" class="btn btn-light">Go to Operators</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Operator Shares</h5>
+                            <p class="card-text">Define and update operator revenue distribution.</p>
+                            <a href="{{ url_for('operator_shares.list_operator_shares') }}" class="btn btn-light">Go to Operator Shares</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Operator Earnings</h5>
+                            <p class="card-text">Track revenue earned from procedures.</p>
+                            <a href="{{ url_for('operator_earnings.list_operator_earnings') }}" class="btn btn-light">View Earnings</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+        <!-- 2️⃣ Clinic Application Management -->
+    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+    <div class="card mt-4">
+        <div class="card-header bg-info text-white">
+            <h4>Clinic Application Management</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Users</h5>
+                            <p class="card-text">Create and manage clinic users.</p>
+                            <a href="{{ url_for('users.list_users') }}" class="btn btn-light">Go to Users</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Clinics</h5>
+                            <p class="card-text">View, add, edit, and manage clinics.</p>
+                            <a href="{{ url_for('clinics.list_clinics') }}" class="btn btn-light">Go to Clinics</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-dark mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Manage Roles</h5>
+                            <p class="card-text">Create and manage user roles.</p>
+                            <a href="{{ url_for('roles.list_roles') }}" class="btn btn-light">Go to Roles</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
 </div>
 {% endblock %}
