@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Settings{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Expense Settings</h2>
+
+    <h3>Expense Types</h3>
+    <a href="{{ url_for('expense_settings.add_expense_type') }}" class="btn btn-primary mb-3">Add New Type</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for type in expense_types %}
+            <tr>
+                <td>{{ type.type_name }}</td>
+                <td>
+                    <a href="{{ url_for('expense_settings.edit_expense_type', type_id=type.expense_type_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form method="POST" action="{{ url_for('expense_settings.delete_expense_type', type_id=type.expense_type_id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Expense Categories</h3>
+    <a href="{{ url_for('expense_settings.add_expense_category') }}" class="btn btn-primary mb-3">Add New Category</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in expense_categories %}
+            <tr>
+                <td>{{ category.category_name }}</td>
+                <td>{{ category.expense_type.type_name if category.expense_type else 'N/A' }}</td>
+                <td>
+                    <a href="{{ url_for('expense_settings.edit_expense_category', category_id=category.expense_category_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form method="POST" action="{{ url_for('expense_settings.delete_expense_category', category_id=category.expense_category_id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

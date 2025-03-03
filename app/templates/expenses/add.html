@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Add Expense{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Add New Expense</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="expense_type_id" class="form-label">Expense Type</label>
+            <select class="form-control" name="expense_type_id" id="expense_type_id" required>
+                <option value="">Select Type</option>
+                {% for type in expense_types %}
+                <option value="{{ type.expense_type_id }}">{{ type.type_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="expense_category_id" class="form-label">Expense Category</label>
+            <select class="form-control" name="expense_category_id" id="expense_category_id" required>
+                <option value="">Select Type First</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="brand" class="form-label">Brand (Optional)</label>
+            <input type="text" class="form-control" name="brand">
+        </div>
+
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control" name="quantity" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="unit" class="form-label">Unit (Optional)</label>
+            <input type="text" class="form-control" name="unit">
+        </div>
+
+        <div class="mb-3">
+            <label for="total_price" class="form-label">Total Price (€)</label>
+            <input type="number" step="0.01" class="form-control" name="total_price" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="purchase_date" class="form-label">Purchase Date</label>
+            <input type="date" class="form-control" name="purchase_date" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="provider" class="form-label">Provider (Optional)</label>
+            <input type="text" class="form-control" name="provider">
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Expense</button>
+        <a href="{{ url_for('expenses.list_expenses') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script>
+document.getElementById('expense_type_id').addEventListener('change', function() {
+    var typeId = this.value;
+    var categoryDropdown = document.getElementById('expense_category_id');
+
+    // Clear existing categories
+    categoryDropdown.innerHTML = '<option value="">Select Type First</option>';
+
+    if (typeId) {
+        fetch('/expenses/get-categories/' + typeId)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(category => {
+                    var option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categoryDropdown.appendChild(option);
+                });
+            });
+    }
+});
+</script>
+
+{% endblock %}

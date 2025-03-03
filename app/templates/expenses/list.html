@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Expenses</h2>
+
+    <a href="{{ url_for('expenses.add_expense') }}" class="btn btn-primary mb-3">Add New Expense</a>
+
+    <!-- ✅ Filter Form -->
+    <form method="GET" class="row g-3 align-items-center mb-4">
+        <div class="col-md-4">
+            <label for="expense_type_id" class="form-label">Filter by Expense Type</label>
+            <select class="form-control" name="expense_type_id" id="expense_type_id">
+                <option value="">All Types</option>
+                {% for type in expense_types %}
+                    <option value="{{ type.expense_type_id }}" {% if selected_type == type.expense_type_id %}selected{% endif %}>
+                        {{ type.type_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="expense_category_id" class="form-label">Filter by Category</label>
+            <select class="form-control" name="expense_category_id" id="expense_category_id">
+                <option value="">All Categories</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="purchase_date" class="form-label">Filter by Date</label>
+            <input type="date" class="form-control" name="purchase_date" value="{{ selected_date }}">
+        </div>
+
+        <div class="col-md-12 mt-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Total Price (€)</th>
+                <th>Price per Unit (€)</th>  <!-- ✅ New Column -->
+                <th>Purchase Date</th>
+                <th>Provider</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.expense_type.type_name if expense.expense_type else 'N/A' }}</td>
+                <td>{{ expense.expense_category.category_name if expense.expense_category else 'N/A' }}</td>
+                <td>{{ expense.brand or "-" }}</td>
+                <td>{{ expense.quantity if expense.quantity else "-" }}</td>
+                <td>{{ expense.unit or "-" }}</td>
+                <td>{{ expense.total_price }}</td>
+                <td>{{ expense.price_per_unit if expense.price_per_unit else "-" }}</td>  <!-- ✅ Show Price per Unit -->
+                <td>{{ expense.purchase_date }}</td>
+                <td>{{ expense.provider or "-" }}</td>
+                <td>
+                    <a href="{{ url_for('expenses.view_expense', expense_id=expense.expense_id) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="{{ url_for('expenses.edit_expense', expense_id=expense.expense_id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form method="POST" action="{{ url_for('expenses.delete_expense', expense_id=expense.expense_id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    <!-- ✅ Total Expense Summary -->
+    <div class="alert alert-info">
+        <strong>Total Expenses:</strong> €{{ total_expense }}
+    </div>
+</div>
+
+<script>
+document.getElementById('expense_type_id').addEventListener('change', function() {
+    var typeId = this.value;
+    var categoryDropdown = document.getElementById('expense_category_id');
+
+    // Clear existing categories
+    categoryDropdown.innerHTML = '<option value="">All Categories</option>';
+
+    if (typeId) {
+        fetch('/expenses/get-categories/' + typeId)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(category => {
+                    var option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categoryDropdown.appendChild(option);
+                });
+            });
+    }
+});
+</script>
+
+{% endblock %}

@@ -19,6 +19,8 @@ from app.routes.operator_earnings import operator_earnings_bp
 from app.routes.clinic_income import clinic_income_bp
 from app.routes.appointments import appointments_bp
 from app.routes.appointment_status import appointment_status_bp
+from app.routes.expense_settings import expense_settings_bp
+from app.routes.expenses import expenses_bp
 
 def create_app():
     app = Flask(__name__)
@@ -45,5 +47,7 @@ def create_app():
     app.register_blueprint(clinic_income_bp)
     app.register_blueprint(appointments_bp)
     app.register_blueprint(appointment_status_bp)
+    app.register_blueprint(expense_settings_bp)
+    app.register_blueprint(expenses_bp)
 
     return app

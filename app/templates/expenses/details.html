@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Expense Details</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Expense Information</h5>
+            <p><strong>Expense Type:</strong> {{ expense.expense_type.type_name if expense.expense_type else 'N/A' }}</p>
+            <p><strong>Expense Category:</strong> {{ expense.expense_category.category_name if expense.expense_category else 'N/A' }}</p>
+            <p><strong>Brand:</strong> {{ expense.brand or "-" }}</p>
+            <p><strong>Quantity:</strong> {{ expense.quantity }}</p>
+            <p><strong>Unit:</strong> {{ expense.unit or "-" }}</p>
+            <p><strong>Total Price (€):</strong> {{ expense.total_price }}</p>
+            <p><strong>Purchase Date:</strong> {{ expense.purchase_date }}</p>
+            <p><strong>Provider:</strong> {{ expense.provider or "-" }}</p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('expenses.list_expenses') }}" class="btn btn-secondary mt-3">Back to Expenses</a>
+</div>
+{% endblock %}

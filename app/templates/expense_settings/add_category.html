@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Add Expense Category{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Add New Expense Category</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="expense_type_id" class="form-label">Expense Type</label>
+            <select class="form-control" name="expense_type_id" required>
+                {% for type in expense_types %}
+                <option value="{{ type.expense_type_id }}">{{ type.type_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="category_name" class="form-label">Category Name</label>
+            <input type="text" class="form-control" name="category_name" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Category</button>
+        <a href="{{ url_for('expense_settings.list_expense_settings') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

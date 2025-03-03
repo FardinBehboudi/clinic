@@ -175,6 +175,34 @@
     </div>
     {% endif %}
 
+    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-4">
+            <div class="card text-white bg-dark mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Expense Settings</h5>
+                    <p class="card-text">View, add, edit, and manage expense types and categories.</p>
+                    <a href="{{ url_for('expense_settings.list_expense_settings') }}" class="btn btn-light">Go to Expense Settings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if current_user.role.role_name in ["Admin", "Doctor"] %}
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-4">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Expenses</h5>
+                    <p class="card-text">View, add, and manage clinic expenses.</p>
+                    <a href="{{ url_for('expenses.list_expenses') }}" class="btn btn-light">Go to Expenses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 
 </div>
 {% endblock %}

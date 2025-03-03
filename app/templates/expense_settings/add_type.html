@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Add Expense Type{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-4">Add New Expense Type</h2>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="type_name" class="form-label">Type Name</label>
+            <input type="text" class="form-control" name="type_name" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Type</button>
+        <a href="{{ url_for('expense_settings.list_expense_settings') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
